@@ -105,35 +105,3 @@ resource "aws_route_table_association" "sts_private" {
   route_table_id = aws_route_table.sts_private.id
 }
 
-# Create a Security Group to allow SSH and HTTP Access to the VPC
-resource "aws_security_group" "sts_security_group" {
-  name        = "${local.name} Security Group"
-  description = "Default SG to allow traffic from the VPC"
-  vpc_id      = aws_vpc.sts_vpc.id
-  depends_on  = [
-    aws_vpc.sts_vpc
-  ]
-
-  ingress {
-    from_port   = "22"
-    to_port     = "22"
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = merge({}, local.tags)
-}
